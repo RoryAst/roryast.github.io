@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Test - AstroCal</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .status {
+            font-weight: bold;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .warning { color: orange; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>CSS Loading Test for GitHub Pages</h1>
+        
+        <div class="test-item">
+            <h3>External CSS File Test</h3>
+            <div id="css-test">Testing CSS loading...</div>
+        </div>
+        
+        <div class="test-item">
+            <h3>Email Input Styling Test</h3>
+            <div class="email-container">
+                <form class="email-form">
+                    <div class="email-input-wrapper">
+                        <input type="email" class="email-input" placeholder="Test email input">
+                    </div>
+                    <button type="button" class="join-waitlist-btn">Test Button</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="test-item">
+            <h3>Test Results</h3>
+            <div id="test-results">Running tests...</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const results = document.getElementById('test-results');
+            const cssTest = document.getElementById('css-test');
+            
+            // Test 1: Check if CSS file is loaded
+            const testElement = document.createElement('div');
+            testElement.className = 'email-input-wrapper';
+            testElement.style.position = 'absolute';
+            testElement.style.left = '-9999px';
+            testElement.style.top = '-9999px';
+            document.body.appendChild(testElement);
+            
+            const computedStyle = window.getComputedStyle(testElement);
+            const hasGradient = computedStyle.background.includes('gradient') || 
+                              computedStyle.backgroundImage.includes('gradient');
+            
+            // Remove test element
+            document.body.removeChild(testElement);
+            
+            // Display results
+            let html = '<ul>';
+            
+            // CSS File Loading Test
+            if (hasGradient) {
+                html += '<li class="success">✓ CSS file loaded successfully</li>';
+                cssTest.innerHTML = '<span class="success">CSS is working!</span>';
+            } else {
+                html += '<li class="error">✗ CSS file not loaded or not working</li>';
+                cssTest.innerHTML = '<span class="error">CSS is not working!</span>';
+            }
+            
+            // Background gradient test
+            if (computedStyle.backgroundImage && computedStyle.backgroundImage !== 'none') {
+                html += '<li class="success">✓ Background gradients are working</li>';
+            } else {
+                html += '<li class="warning">⚠ Background gradients may not be working</li>';
+            }
+            
+            // Border radius test
+            if (computedStyle.borderRadius && computedStyle.borderRadius !== '0px') {
+                html += '<li class="success">✓ Border radius is working</li>';
+            } else {
+                html += '<li class="warning">⚠ Border radius may not be working</li>';
+            }
+            
+            // Box shadow test
+            if (computedStyle.boxShadow && computedStyle.boxShadow !== 'none') {
+                html += '<li class="success">✓ Box shadows are working</li>';
+            } else {
+                html += '<li class="warning">⚠ Box shadows may not be working</li>';
+            }
+            
+            html += '</ul>';
+            
+            // Additional debugging info
+            html += '<h4>Debug Information:</h4>';
+            html += '<ul>';
+            html += `<li>Background: ${computedStyle.background}</li>`;
+            html += `<li>Background Image: ${computedStyle.backgroundImage}</li>`;
+            html += `<li>Border Radius: ${computedStyle.borderRadius}</li>`;
+            html += `<li>Box Shadow: ${computedStyle.boxShadow}</li>`;
+            html += `<li>Display: ${computedStyle.display}</li>`;
+            html += `<li>Position: ${computedStyle.position}</li>`;
+            html += '</ul>';
+            
+            results.innerHTML = html;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iCalendar Event Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="scroll-container">
+        <div class="floating-dock">
+            <button class="dock-button" id="dockButton" onclick="scrollToProductOverview()">
+                <span class="logo-text">AstroCal</span>
+                <span class="separator">|</span>
+                <span class="scroll-arrow">↓</span>
+                <span class="separator">|</span>
+                <span class="cta-text">Discover</span>
+            </button>
+            
+            <button class="join-button" id="joinButton" onclick="joinTheList()">
+                <span class="join-text">Join the list</span>
+            </button>
+        </div>
+
+        <section class="hero">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1 class="hero-title">
+                            Navigate your universe of a schedule, with
+                            <span class="gradient-text">
+                                AstroCal
+                            </span>
+                        </h1>
+                        <p class="hero-description">
+                            Effortlessly navigate your busy schedule with our personalized scheduling assistant. 
+                            Integrates seamlessly with your existing calendar systems.
+                        </p>
+                        
+                        <div class="hero-features">
+                            <div class="feature-item">
+                                <div class="feature-bullet"></div>
+                                <span class="feature-text">Advanced Recurring Events</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-bullet"></div>
+                                <span class="feature-text">Productivity Recommendations</span>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-bullet"></div>
+                                <span class="feature-text">Google Calendar/Outlook Integration</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero-calendar">
+                        <div class="calendar-card">
+                            <div class="event-list-view">
+                                <div class="day-header">
+                                    <div class="day-date">Today's Schedule</div>
+                                </div>
+                                <div class="event-list">
+                                    <div class="event-item">
+                                        <div class="event-time">9:00 AM</div>
+                                        <div class="event-title">Team Meeting</div>
+                                        <div class="event-type meeting">Meeting</div>
+                                    </div>
+                                    <div class="event-item suggested-task">
+                                        <div class="event-title">Client Presentation</div>
+                                        <div class="event-type presentation">Presentation</div>
+                                    </div>
+                                    <div class="event-item">
+                                        <div class="event-time">2:00 PM</div>
+                                        <div class="event-title">Project Review</div>
+                                        <div class="event-type review">Review</div>
+                                    </div>
+                                    <div class="event-item suggested-task">
+                                        <div class="event-title">Client Call</div>
+                                        <div class="event-type call">Call</div>
+                                    </div>
+                                    <div class="event-item">
+                                        <div class="event-time">6:00 PM</div>
+                                        <div class="event-title">Team Standup</div>
+                                        <div class="event-type standup">Standup</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    </section>
+
+    <!-- Product Overview Section -->
+    <section id="product-overview" class="product-overview">
+                <div class="product-overview-content">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            Why Choose <span class="gradient-text">AstroCal</span>?
+                        </h2>
+                        <p class="section-description">
+                            Experience the future of calendar management with our intelligent scheduling platform
+                        </p>
+                    </div>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <div class="icon-calendar">📅</div>
+                            </div>
+                            <h3 class="feature-title">Smart Scheduling</h3>
+                            <p class="feature-description">
+                                AI-powered suggestions help you find the perfect time slots for meetings and tasks, optimizing your productivity with intelligent recommendations.
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <div class="icon-sync">🔄</div>
+                            </div>
+                            <h3 class="feature-title">Seamless Integration</h3>
+                            <p class="feature-description">
+                                Connect with Google Calendar, Outlook, and other major calendar platforms for unified scheduling across all your devices and workflows.
+                            </p>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <div class="icon-analytics">📊</div>
+                            </div>
+                            <h3 class="feature-title">Productivity Insights</h3>
+                            <p class="feature-description">
+                                Get detailed analytics on your time usage and receive personalized recommendations to improve your workflow and maximize efficiency.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

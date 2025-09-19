@@ -621,93 +621,63 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Missing elements for scroll functionality');
     }
     
-    // Add scroll detection for button animation
-    let isJoinButtonVisible = false;
-    let scrollTimeout;
-    let isScrolling = false;
-    let scrollSnapTimeout;
+    // Add bottom scroll detection for dock button fade out
+    const scrollContainerForBottomDetection = document.querySelector('.scroll-container');
     
-    // Use the scroll container for scroll detection
-    const scrollContainerForDetection = document.querySelector('.scroll-container');
-    
-    if (scrollContainerForDetection) {
-        scrollContainerForDetection.addEventListener('scroll', function() {
-            // Clear existing timeout
-            clearTimeout(scrollTimeout);
-            clearTimeout(scrollSnapTimeout);
+    if (scrollContainerForBottomDetection) {
+        scrollContainerForBottomDetection.addEventListener('scroll', function() {
+            const dockButton = document.getElementById('dockButton');
             
-            // Mark as scrolling
-            isScrolling = true;
-            
-            // Check position immediately for responsive animation
-            if (productOverview) {
-                const scrollTop = scrollContainerForDetection.scrollTop;
-                const containerHeight = scrollContainerForDetection.clientHeight;
-                const productOverviewTop = productOverview.offsetTop;
+            if (dockButton) {
+                // Calculate scroll position
+                const scrollTop = scrollContainerForBottomDetection.scrollTop;
+                const scrollHeight = scrollContainerForBottomDetection.scrollHeight;
+                const clientHeight = scrollContainerForBottomDetection.clientHeight;
                 
-                // Check if we're in the product overview section
-                const isInProductSection = scrollTop >= productOverviewTop - containerHeight * 0.3;
+                // Check if we're near the bottom (within 100px)
+                const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
                 
-                console.log('Scrolling - Position:', scrollTop, 'Product section top:', productOverviewTop, 'In product section:', isInProductSection);
-                
-                // Animate immediately during scroll
-                if (isInProductSection && !isJoinButtonVisible) {
-                    showJoinButton();
-                    isJoinButtonVisible = true;
-                } else if (!isInProductSection && isJoinButtonVisible) {
-                    hideJoinButton();
-                    isJoinButtonVisible = false;
+                if (isNearBottom) {
+                    // Fade out the dock button
+                    dockButton.style.opacity = '0';
+                    dockButton.style.transform = 'translateX(-50%) translateY(20px)';
+                    dockButton.style.visibility = 'hidden';
+                } else {
+                    // Fade in the dock button
+                    dockButton.style.opacity = '1';
+                    dockButton.style.transform = 'translateX(-50%) translateY(0)';
+                    dockButton.style.visibility = 'visible';
                 }
             }
-            
-            // Set a timeout to check scroll position after scrolling stops
-            scrollTimeout = setTimeout(() => {
-                isScrolling = false;
-                console.log('Scroll stopped');
-            }, 50);
-            
-            // Additional timeout for scroll snap completion
-            scrollSnapTimeout = setTimeout(() => {
-                if (productOverview) {
-                    const scrollTop = scrollContainerForDetection.scrollTop;
-                    const containerHeight = scrollContainerForDetection.clientHeight;
-                    const productOverviewTop = productOverview.offsetTop;
-                    
-                    const isInProductSection = scrollTop >= productOverviewTop - containerHeight * 0.5;
-                    
-                    console.log('Scroll snap complete - Final position:', scrollTop, 'In product section:', isInProductSection);
-                    
-                    // Final check after scroll snap
-                    if (isInProductSection && !isJoinButtonVisible) {
-                        showJoinButton();
-                        isJoinButtonVisible = true;
-                    } else if (!isInProductSection && isJoinButtonVisible) {
-                        hideJoinButton();
-                        isJoinButtonVisible = false;
-                    }
-                }
-            }, 300); // Wait for scroll snap to complete
         });
     } else {
         // Fallback to window scroll if container not found
         window.addEventListener('scroll', function() {
-            clearTimeout(scrollTimeout);
-            scrollTimeout = setTimeout(() => {
-                if (productOverview) {
-                    const rect = productOverview.getBoundingClientRect();
-                    const isInView = rect.top <= window.innerHeight * 0.3 && rect.bottom >= window.innerHeight * 0.3;
-                    
-                    if (isInView && !isJoinButtonVisible) {
-                        showJoinButton();
-                        isJoinButtonVisible = true;
-                    } else if (!isInView && isJoinButtonVisible) {
-                        hideJoinButton();
-                        isJoinButtonVisible = false;
-                    }
+            const dockButton = document.getElementById('dockButton');
+            
+            if (dockButton) {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const scrollHeight = document.documentElement.scrollHeight;
+                const clientHeight = window.innerHeight;
+                
+                // Check if we're near the bottom (within 100px)
+                const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+                
+                if (isNearBottom) {
+                    // Fade out the dock button
+                    dockButton.style.opacity = '0';
+                    dockButton.style.transform = 'translateX(-50%) translateY(20px)';
+                    dockButton.style.visibility = 'hidden';
+                } else {
+                    // Fade in the dock button
+                    dockButton.style.opacity = '1';
+                    dockButton.style.transform = 'translateX(-50%) translateY(0)';
+                    dockButton.style.visibility = 'visible';
                 }
-            }, 150);
+            }
         });
     }
+    
 });
 
 // Global function for onclick handler
@@ -730,45 +700,147 @@ function scrollToProductOverview() {
     }
 }
 
-// Global function for join button
-function joinTheList() {
-    alert('Thank you for your interest! We\'ll be in touch soon with updates about AstroCal.');
-}
+// ========================================
+// EMAIL INPUT FUNCTIONALITY
+// ========================================
 
-// Button animation functions
-function showJoinButton() {
-    const dockButton = document.getElementById('dockButton');
-    const joinButton = document.getElementById('joinButton');
-    
-    console.log('Showing join button');
-    
-    if (dockButton && joinButton) {
-        // Start hiding dock button immediately
-        dockButton.classList.add('hide');
+class EmailInputHandler {
+    constructor() {
+        this.emailForm = document.getElementById('emailForm');
+        this.emailInput = document.getElementById('emailInput');
+        this.emailStatus = document.getElementById('emailStatus');
         
-        // Show join button with shorter delay for more responsive animation
-        setTimeout(() => {
-            joinButton.classList.add('show');
-        }, 200);
+        this.init();
+    }
+    
+    init() {
+        if (this.emailForm) {
+            this.emailForm.addEventListener('submit', (e) => this.handleSubmit(e));
+        }
+        
+        // Add click listener to button for debugging
+        const button = document.querySelector('.join-waitlist-btn');
+        if (button) {
+            button.addEventListener('click', (e) => {
+                console.log('Button clicked!', e);
+                // Prevent default to let form handle submission
+                e.preventDefault();
+                this.handleSubmit(e);
+            });
+        }
+        
+        if (this.emailInput) {
+            this.emailInput.addEventListener('input', () => this.handleInput());
+            this.emailInput.addEventListener('focus', () => this.handleFocus());
+            this.emailInput.addEventListener('blur', () => this.handleBlur());
+            this.emailInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.handleSubmit(e);
+                }
+            });
+        }
+    }
+    
+    handleInput() {
+        // Clear any existing status messages
+        this.clearStatus();
+    }
+    
+    handleFocus() {
+        // No visual changes on focus
+    }
+    
+    handleBlur() {
+        // No visual changes on blur
+    }
+    
+    async handleSubmit(e) {
+        e.preventDefault();
+        
+        const email = this.emailInput.value.trim();
+        
+        if (!this.validateEmail(email)) {
+            this.showStatus('Please enter a valid email address', 'error');
+            return;
+        }
+        
+        this.setLoadingState(true);
+        this.showStatus('Joining waitlist...', 'loading');
+        
+        try {
+            // Simulate API call - replace with actual endpoint
+            await this.submitEmail(email);
+            this.showStatus('Successfully joined the waitlist! 🎉', 'success');
+            this.emailInput.value = '';
+            this.animateSuccess();
+        } catch (error) {
+            this.showStatus('Something went wrong. Please try again.', 'error');
+            console.error('Email submission error:', error);
+        } finally {
+            this.setLoadingState(false);
+        }
+    }
+    
+    validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    async submitEmail(email) {
+        // Simulate API call with delay
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // Simulate success (replace with actual API call)
+                if (Math.random() > 0.1) { // 90% success rate for demo
+                    resolve({ success: true });
+                } else {
+                    reject(new Error('Network error'));
+                }
+            }, 1500);
+        });
+    }
+    
+    setLoadingState(isLoading) {
+        if (isLoading) {
+            this.emailInput.disabled = true;
+            this.emailInput.style.opacity = '0.7';
+            this.emailInput.placeholder = 'Joining waitlist...';
+        } else {
+            this.emailInput.disabled = false;
+            this.emailInput.style.opacity = '1';
+            this.emailInput.placeholder = 'Enter your email address';
+        }
+    }
+    
+    showStatus(message, type) {
+        this.emailStatus.textContent = message;
+        this.emailStatus.className = `email-status ${type}`;
+        
+        // Auto-clear success messages after 5 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                this.clearStatus();
+            }, 5000);
+        }
+    }
+    
+    clearStatus() {
+        this.emailStatus.textContent = '';
+        this.emailStatus.className = 'email-status';
+    }
+    
+    animateSuccess() {
+        // No visual animations on success
     }
 }
 
-function hideJoinButton() {
-    const dockButton = document.getElementById('dockButton');
-    const joinButton = document.getElementById('joinButton');
-    
-    console.log('Hiding join button');
-    
-    if (dockButton && joinButton) {
-        // Start hiding join button immediately
-        joinButton.classList.remove('show');
-        
-        // Show dock button with shorter delay for more responsive animation
-        setTimeout(() => {
-            dockButton.classList.remove('hide');
-        }, 200);
-    }
-}
+// Initialize email input handler when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    new EmailInputHandler();
+});
+
+
 
 // Alternative approach - try immediately without waiting for DOMContentLoaded
 (function() {

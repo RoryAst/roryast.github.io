@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iCalendar Event Generator</title>
+    <title>AstroCal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,16 +13,14 @@
     <div class="scroll-container">
         <div class="floating-dock">
             <button class="dock-button" id="dockButton" onclick="scrollToProductOverview()">
-                <span class="logo-text">AstroCal</span>
-                <span class="separator">|</span>
-                <span class="scroll-arrow">↓</span>
-                <span class="separator">|</span>
-                <span class="cta-text">Discover</span>
+                <div class="dock-content">
+                    <span class="scroll-arrow">↓</span>
+                    <span class="logo-text">AstroCal</span>
+                    <span class="scroll-arrow">↓</span>
+                </div>
+                
             </button>
             
-            <button class="join-button" id="joinButton" onclick="joinTheList()">
-                <span class="join-text">Join the list</span>
-            </button>
         </div>
 
         <section class="hero">
@@ -96,7 +94,7 @@
                 <div class="product-overview-content">
                     <div class="section-header">
                         <h2 class="section-title">
-                            Why Choose <span class="gradient-text">AstroCal</span>?
+                            What is <span class="gradient-text">AstroCal</span>?
                         </h2>
                         <p class="section-description">
                             Experience the future of calendar management with our intelligent scheduling platform
@@ -133,6 +131,23 @@
                                 Get detailed analytics on your time usage and receive personalized recommendations to improve your workflow and maximize efficiency.
                             </p>
                         </div>
+                    </div>
+
+                    <!-- Email Input Section -->
+                    <div class="email-container">
+                        <form class="email-form" id="emailForm">
+                            <div class="email-input-wrapper">
+                                <input 
+                                    type="email" 
+                                    id="emailInput" 
+                                    class="email-input" 
+                                    placeholder="Enter your email address"
+                                    required
+                                >
+                            </div>
+                            <button type="submit" class="join-waitlist-btn" tabindex="0" aria-label="Join the waitlist">Join the Waitlist</button>
+                            <div class="email-status" id="emailStatus"></div>
+                        </form>
                     </div>
                 </div>
         </section>

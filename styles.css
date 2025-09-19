@@ -334,16 +334,17 @@ body::before {
 
 .floating-dock {
     position: fixed;
-    bottom: 30px;
+    bottom: 45px;
     left: 50%;
-    transform: translateX(-50%);
     z-index: var(--z-index-dock);
+    pointer-events: none;
 }
 
 .dock-button {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--dock-gap);
+    gap: var(--space-2);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: var(--backdrop-blur-xl);
     -webkit-backdrop-filter: var(--backdrop-blur-xl);
@@ -356,17 +357,47 @@ body::before {
     font-family: var(--font-family-primary);
     position: relative;
     z-index: 2;
+    transform: translateX(-50%);
+    pointer-events: auto;
+}
+
+.dock-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    justify-content: center;
+}
+
+.side-arrow {
+    font-size: var(--font-size-lg);
+    color: var(--color-primary-purple);
+    font-weight: var(--font-weight-semibold);
+    transition: all var(--transition-base);
+    animation: sideArrowPulse 2s infinite;
+    min-width: 20px;
+    text-align: center;
+}
+
+@keyframes sideArrowPulse {
+    0%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
 }
 
 .dock-button.hide {
-    transform: translateY(100px);
+    transform: translateX(-50%) translateY(100px);
     opacity: 0;
     visibility: hidden;
 }
 
 .dock-button:hover {
     box-shadow: var(--shadow-dock-hover);
-    transform: translateY(-4px) scale(1.05);
+    transform: translateX(-50%) translateY(-4px) scale(1.05);
 }
 
 .dock-button .logo-text {
@@ -455,16 +486,6 @@ body::before {
     flex-shrink: 0;
 }
 
-.join-text {
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-white);
-    text-transform: uppercase;
-    letter-spacing: var(--letter-spacing-wider);
-    text-align: center;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    white-space: nowrap;
-}
 
 @keyframes pulse {
     0%, 100% {
@@ -492,14 +513,15 @@ body::before {
    ======================================== */
 
 .hero {
-    padding: var(--space-10) var(--space-10) var(--space-16);
+    padding: var(--space-8) var(--space-10) var(--space-20);
     background: var(--gradient-background-main);
     position: relative;
     z-index: var(--z-index-dropdown);
     height: 100vh;
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 15vh;
     scroll-snap-align: start;
     scroll-snap-stop: always;
     overflow: hidden;
@@ -633,7 +655,7 @@ body::before {
    ======================================== */
 
 .product-overview {
-    padding: var(--space-20) var(--space-10);
+    padding: var(--space-16) var(--space-20);
     background: var(--color-star-white);
     position: relative;
     z-index: var(--z-index-dropdown);
@@ -642,7 +664,7 @@ body::before {
     height: 100vh;
     width: 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -655,11 +677,11 @@ body::before {
 
 .section-header {
     text-align: center;
-    margin-bottom: var(--space-16);
+    margin-bottom: var(--space-8);
 }
 
 .section-title {
-    font-size: var(--font-size-4xl);
+    font-size: var(--font-size-6xl);
     font-weight: var(--font-weight-extrabold);
     color: var(--color-text-primary);
     line-height: var(--line-height-tight);
@@ -994,6 +1016,205 @@ body::before {
     
     .feature-card {
         padding: var(--space-6);
+    }
+}
+
+/* ========================================
+   EMAIL INPUT SECTION
+   ======================================== */
+
+.email-container {
+    max-width: 500px;
+    width: 100%;
+    margin: var(--space-20) auto 0;
+    text-align: center;
+    position: relative;
+    z-index: 20;
+    padding-bottom: 50px;
+}
+
+.email-form {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-4);
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    pointer-events: auto;
+}
+
+.email-input-wrapper {
+    position: relative;
+    display: flex;
+    background: linear-gradient(135deg, #6b21a8 0%, #8b5cf6 50%, #3b82f6 100%);
+    border-radius: var(--radius-full);
+    padding: 3px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    flex: 1;
+    max-width: 350px;
+    min-width: 250px;
+    height: 56px;
+    flex-shrink: 0;
+}
+
+.email-input-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    background: var(--color-star-white);
+    border-radius: var(--radius-full);
+    z-index: 1;
+}
+
+.email-input-wrapper .email-input {
+    position: relative;
+    z-index: 2;
+}
+
+.email-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: var(--space-5) var(--space-6);
+    font-size: var(--font-size-lg);
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    background: transparent;
+    border-radius: var(--radius-full);
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    height: 100%;
+}
+
+.join-waitlist-btn {
+    background: var(--gradient-button-secondary);
+    color: var(--color-text-white);
+    border: none;
+    border-radius: var(--radius-full);
+    padding: var(--space-5) var(--space-8);
+    font-size: var(--font-size-lg);
+    font-family: var(--font-family-primary);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    white-space: nowrap;
+    position: relative;
+    z-index: 25;
+    pointer-events: auto;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: var(--backdrop-blur-xl);
+    -webkit-backdrop-filter: var(--backdrop-blur-xl);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+    min-width: 180px;
+    height: 56px;
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.join-waitlist-btn:hover {
+    background: linear-gradient(135deg, var(--color-primary-purple) 0%, var(--color-primary-blue) 100%);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-button-hover);
+}
+
+.join-waitlist-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-button);
+}
+
+.join-waitlist-btn:focus {
+    outline: 2px solid var(--color-primary-purple);
+    outline-offset: 2px;
+}
+
+.join-waitlist-btn:focus-visible {
+    outline: 2px solid var(--color-primary-purple);
+    outline-offset: 2px;
+}
+
+.email-input::placeholder {
+    color: var(--color-text-muted);
+    font-weight: var(--font-weight-normal);
+}
+
+
+.email-status {
+    margin-top: var(--space-4);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+}
+
+.email-status.success {
+    color: var(--color-success);
+}
+
+.email-status.error {
+    color: var(--color-error);
+}
+
+.email-status.loading {
+    color: var(--color-primary-blue);
+}
+
+
+/* Responsive design for email section */
+@media (max-width: 768px) {
+    .email-container {
+        margin: var(--space-16) auto 0;
+        max-width: 400px;
+        padding-bottom: 50px;
+    }
+    
+    .email-form {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+    
+    .email-input {
+        padding: var(--space-4) var(--space-5);
+        font-size: var(--font-size-base);
+    }
+    
+    .email-input-wrapper {
+        max-width: 100%;
+        min-width: auto;
+        height: 52px;
+    }
+    
+    .join-waitlist-btn {
+        padding: var(--space-4) var(--space-7);
+        font-size: var(--font-size-base);
+        width: 100%;
+        max-width: 300px;
+        min-width: auto;
+        height: 52px;
     }
 }
 

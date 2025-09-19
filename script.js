@@ -621,61 +621,67 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Missing elements for scroll functionality');
     }
     
+    // Function to check scroll position and update dock button visibility
+    function updateDockButtonVisibility() {
+        const dockButton = document.getElementById('dockButton');
+        if (!dockButton) return;
+        
+        const scrollContainerForBottomDetection = document.querySelector('.scroll-container');
+        
+        if (scrollContainerForBottomDetection) {
+            // Calculate scroll position
+            const scrollTop = scrollContainerForBottomDetection.scrollTop;
+            const scrollHeight = scrollContainerForBottomDetection.scrollHeight;
+            const clientHeight = scrollContainerForBottomDetection.clientHeight;
+            
+            // Check if we're near the bottom (within 100px)
+            const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+            
+            if (isNearBottom) {
+                // Fade out the dock button
+                dockButton.style.opacity = '0';
+                dockButton.style.transform = 'translateX(-50%) translateY(20px)';
+                dockButton.style.visibility = 'hidden';
+            } else {
+                // Fade in the dock button
+                dockButton.style.opacity = '1';
+                dockButton.style.transform = 'translateX(-50%) translateY(0)';
+                dockButton.style.visibility = 'visible';
+            }
+        } else {
+            // Fallback to window scroll if container not found
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight;
+            const clientHeight = window.innerHeight;
+            
+            // Check if we're near the bottom (within 100px)
+            const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+            
+            if (isNearBottom) {
+                // Fade out the dock button
+                dockButton.style.opacity = '0';
+                dockButton.style.transform = 'translateX(-50%) translateY(20px)';
+                dockButton.style.visibility = 'hidden';
+            } else {
+                // Fade in the dock button
+                dockButton.style.opacity = '1';
+                dockButton.style.transform = 'translateX(-50%) translateY(0)';
+                dockButton.style.visibility = 'visible';
+            }
+        }
+    }
+    
+    // Check initial scroll position on page load
+    updateDockButtonVisibility();
+    
     // Add bottom scroll detection for dock button fade out
     const scrollContainerForBottomDetection = document.querySelector('.scroll-container');
     
     if (scrollContainerForBottomDetection) {
-        scrollContainerForBottomDetection.addEventListener('scroll', function() {
-            const dockButton = document.getElementById('dockButton');
-            
-            if (dockButton) {
-                // Calculate scroll position
-                const scrollTop = scrollContainerForBottomDetection.scrollTop;
-                const scrollHeight = scrollContainerForBottomDetection.scrollHeight;
-                const clientHeight = scrollContainerForBottomDetection.clientHeight;
-                
-                // Check if we're near the bottom (within 100px)
-                const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
-                
-                if (isNearBottom) {
-                    // Fade out the dock button
-                    dockButton.style.opacity = '0';
-                    dockButton.style.transform = 'translateX(-50%) translateY(20px)';
-                    dockButton.style.visibility = 'hidden';
-                } else {
-                    // Fade in the dock button
-                    dockButton.style.opacity = '1';
-                    dockButton.style.transform = 'translateX(-50%) translateY(0)';
-                    dockButton.style.visibility = 'visible';
-                }
-            }
-        });
+        scrollContainerForBottomDetection.addEventListener('scroll', updateDockButtonVisibility);
     } else {
         // Fallback to window scroll if container not found
-        window.addEventListener('scroll', function() {
-            const dockButton = document.getElementById('dockButton');
-            
-            if (dockButton) {
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const scrollHeight = document.documentElement.scrollHeight;
-                const clientHeight = window.innerHeight;
-                
-                // Check if we're near the bottom (within 100px)
-                const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
-                
-                if (isNearBottom) {
-                    // Fade out the dock button
-                    dockButton.style.opacity = '0';
-                    dockButton.style.transform = 'translateX(-50%) translateY(20px)';
-                    dockButton.style.visibility = 'hidden';
-                } else {
-                    // Fade in the dock button
-                    dockButton.style.opacity = '1';
-                    dockButton.style.transform = 'translateX(-50%) translateY(0)';
-                    dockButton.style.visibility = 'visible';
-                }
-            }
-        });
+        window.addEventListener('scroll', updateDockButtonVisibility);
     }
     
 });
@@ -710,7 +716,34 @@ class EmailInputHandler {
         this.emailInput = document.getElementById('emailInput');
         this.emailStatus = document.getElementById('emailStatus');
         
+        // Initialize Supabase client
+        this.supabase = null;
+        this.initSupabase();
+        
         this.init();
+    }
+    
+    initSupabase() {
+        // Initialize Supabase client
+        try {
+            // Check if config is available
+            if (window.SUPABASE_CONFIG) {
+                this.supabase = supabase.createClient(
+                    window.SUPABASE_CONFIG.url,
+                    window.SUPABASE_CONFIG.anonKey
+                );
+            } else {
+                // Fallback to placeholder values (replace these with your actual credentials)
+                this.supabase = supabase.createClient(
+                    'YOUR_SUPABASE_URL', // Replace with your Supabase URL
+                    'YOUR_SUPABASE_ANON_KEY' // Replace with your Supabase anon key
+                );
+            }
+            console.log('Supabase client initialized successfully');
+        } catch (error) {
+            console.error('Failed to initialize Supabase client:', error);
+            this.supabase = null;
+        }
     }
     
     init() {
@@ -788,17 +821,43 @@ class EmailInputHandler {
     }
     
     async submitEmail(email) {
-        // Simulate API call with delay
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                // Simulate success (replace with actual API call)
-                if (Math.random() > 0.1) { // 90% success rate for demo
-                    resolve({ success: true });
+        // Check if Supabase is initialized
+        if (!this.supabase) {
+            throw new Error('Database connection not available. Please try again later.');
+        }
+
+        try {
+            // Insert email into Supabase waitlist_emails table
+            const { data, error } = await this.supabase
+                .from('waitlist_emails')
+                .insert([
+                    {
+                        email: email,
+                        subscribed_at: new Date().toISOString(),
+                        source: 'website_landing'
+                    }
+                ]);
+
+            if (error) {
+                // Handle specific Supabase errors
+                if (error.code === '23505') {
+                    throw new Error('This email is already on our waitlist!');
+                } else if (error.code === '23514') {
+                    throw new Error('Please enter a valid email address');
+                } else if (error.code === 'PGRST301') {
+                    throw new Error('Database connection failed. Please try again.');
                 } else {
-                    reject(new Error('Network error'));
+                    console.error('Supabase error details:', error);
+                    throw new Error('Failed to join waitlist. Please try again.');
                 }
-            }, 1500);
-        });
+            }
+
+            console.log('Email successfully added to waitlist:', data);
+            return { success: true, data };
+        } catch (error) {
+            console.error('Email submission error:', error);
+            throw error;
+        }
     }
     
     setLoadingState(isLoading) {

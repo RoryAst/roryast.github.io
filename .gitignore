@@ -1,0 +1,6 @@
+# IDE and editor files
+.cursor/
+
+# Documentation and setup files
+SUPABASE_SETUP_GUIDE.md
+supabase-schema.sql

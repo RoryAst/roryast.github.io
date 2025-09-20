@@ -7,204 +7,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Fallback styles for email bubbles in case CSS doesn't load on GitHub Pages */
-        .email-input-wrapper {
-            position: relative;
-            display: flex;
-            background: linear-gradient(135deg, #6b21a8 0%, #8b5cf6 50%, #3b82f6 100%);
-            border-radius: 9999px;
-            padding: 3px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            flex: 1;
-            max-width: 350px;
-            min-width: 250px;
-            height: 56px;
-            flex-shrink: 0;
-        }
-        
-        .email-input-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            right: 3px;
-            bottom: 3px;
-            background: #ffffff;
-            border-radius: 9999px;
-            z-index: 1;
-        }
-        
-        .email-input-wrapper .email-input {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .email-input {
-            flex: 1;
-            border: none;
-            outline: none;
-            padding: 1.25rem 1.5rem;
-            font-size: 1.125rem;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-weight: 500;
-            color: #0f172a;
-            background: transparent;
-            border-radius: 9999px;
-            width: 100%;
-            position: relative;
-            z-index: 2;
-            height: 100%;
-        }
-        
-        .join-waitlist-btn {
-            background: linear-gradient(135deg, #6b21a8 0%, #0ea5e9 100%);
-            color: #ffffff;
-            border: none;
-            border-radius: 9999px;
-            padding: 1.25rem 2rem;
-            font-size: 1.125rem;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            position: relative;
-            z-index: 25;
-            pointer-events: auto;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            flex-shrink: 0;
-            min-width: 180px;
-            height: 56px;
-            width: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-        }
-        
-        .join-waitlist-btn:hover {
-            background: linear-gradient(135deg, #6b21a8 0%, #0ea5e9 100%);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        
-        .join-waitlist-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-        
-        .join-waitlist-btn:focus {
-            outline: 2px solid #6b21a8;
-            outline-offset: 2px;
-        }
-        
-        .join-waitlist-btn:focus-visible {
-            outline: 2px solid #6b21a8;
-            outline-offset: 2px;
-        }
-        
-        .email-input::placeholder {
-            color: #64748b;
-            font-weight: 400;
-        }
-        
-        .email-container {
-            max-width: 500px;
-            width: 100%;
-            margin: 5rem auto 0;
-            text-align: center;
-            position: relative;
-            z-index: 20;
-            padding-bottom: 50px;
-        }
-        
-        .email-form {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            flex-direction: row;
-            gap: 1rem;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            pointer-events: auto;
-        }
-        
-        .email-status {
-            margin-top: 1rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-        }
-        
-        .email-status.success {
-            color: #10b981;
-        }
-        
-        .email-status.error {
-            color: #ef4444;
-        }
-        
-        .email-status.loading {
-            color: #0ea5e9;
-        }
-        
-        /* Responsive design for email section */
-        @media (max-width: 768px) {
-            .email-container {
-                margin: 4rem auto 0;
-                max-width: 400px;
-                padding-bottom: 50px;
-            }
-            
-            .email-form {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-            
-            .email-input {
-                padding: 1rem 1.25rem;
-                font-size: 1rem;
-            }
-            
-            .email-input-wrapper {
-                max-width: 100%;
-                min-width: auto;
-                height: 52px;
-            }
-            
-            .join-waitlist-btn {
-                padding: 1rem 1.75rem;
-                font-size: 1rem;
-                width: 100%;
-                max-width: 300px;
-                min-width: auto;
-                height: 52px;
-            }
-        }
-    </style>
+    <!-- Modular CSS Files -->
+    <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
+    <link rel="stylesheet" href="assets/css/utilities.css">
 </head>
-<body>
+<body class="landing-page">
     <div class="scroll-container">
         <div class="floating-dock">
             <button class="dock-button" id="dockButton" onclick="scrollToProductOverview()">
@@ -226,12 +35,7 @@
                             <span class="gradient-text">
                                 AstroCal
                             </span>
-                        </h1>
-                        <p class="hero-description">
-                            Effortlessly navigate your busy schedule with our personalized scheduling assistant. 
-                            Integrates seamlessly with your existing calendar systems.
-                        </p>
-                        
+                        </h1>                                            
                         <div class="hero-features">
                             <div class="feature-item">
                                 <div class="feature-bullet"></div>
@@ -245,6 +49,10 @@
                                 <div class="feature-bullet"></div>
                                 <span class="feature-text">Google Calendar/Outlook Integration</span>
                             </div>
+                        </div>
+                        <div class="hero-actions">
+                            <button class="get-started-btn" onclick="redirectToAuth('signup')">Get Started</button>
+                            <button class="login-btn" onclick="redirectToAuth('login')">Log In</button>
                         </div>
                     </div>
                     <div class="hero-calendar">
@@ -330,19 +138,18 @@
 
                     <!-- Email Input Section -->
                     <div class="email-container">
-                        <form class="email-form" id="emailForm">
+                        <div class="email-form">
                             <div class="email-input-wrapper">
                                 <input 
                                     type="email" 
                                     id="emailInput" 
                                     class="email-input" 
                                     placeholder="Enter your email address"
-                                    required
+                                    onkeypress="handleEmailKeyPress(event)"
                                 >
                             </div>
-                            <button type="submit" class="join-waitlist-btn" tabindex="0" aria-label="Join the waitlist">Join the Waitlist</button>
-                            <div class="email-status" id="emailStatus"></div>
-                        </form>
+                            <button type="button" class="join-waitlist-btn" tabindex="0" aria-label="Get started" onclick="redirectToAuth()">Get Started</button>
+                        </div>
                     </div>
                 </div>
         </section>
@@ -350,62 +157,48 @@
 
     <!-- Supabase Client Library -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <!-- Supabase Configuration (update with your credentials) -->
-    <script src="supabase-config.js"></script>
-    <script src="script.js"></script>
+    <!-- Supabase Configuration -->
+    <script src="config/supabase-config.js"></script>
+    <!-- Landing Page JavaScript Files -->
+    <script src="assets/js/scroll.js"></script>
+    <!-- Page functionality loaded via modular JS files -->
     <script>
-        // CSS Loading Verification Script
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if CSS is loaded properly
-            const testElement = document.createElement('div');
-            testElement.className = 'email-input-wrapper';
-            testElement.style.position = 'absolute';
-            testElement.style.left = '-9999px';
-            testElement.style.top = '-9999px';
-            document.body.appendChild(testElement);
+        function redirectToAuth(mode = 'signup') {
+            const emailInput = document.getElementById('emailInput');
+            let email = '';
             
-            const computedStyle = window.getComputedStyle(testElement);
-            const hasGradient = computedStyle.background.includes('gradient') || 
-                              computedStyle.backgroundImage.includes('gradient');
-            
-            console.log('CSS Loading Check:');
-            console.log('- CSS file loaded:', computedStyle.background !== 'rgba(0, 0, 0, 0)');
-            console.log('- Gradient applied:', hasGradient);
-            console.log('- Background color:', computedStyle.backgroundColor);
-            console.log('- Background image:', computedStyle.backgroundImage);
-            
-            // Remove test element
-            document.body.removeChild(testElement);
-            
-            // If CSS didn't load properly, show a warning
-            if (!hasGradient) {
-                console.warn('CSS may not be loading properly on GitHub Pages. Fallback styles are active.');
-                
-                // Add a visual indicator for debugging
-                const debugIndicator = document.createElement('div');
-                debugIndicator.style.cssText = `
-                    position: fixed;
-                    top: 10px;
-                    right: 10px;
-                    background: #ff6b6b;
-                    color: white;
-                    padding: 8px 12px;
-                    border-radius: 4px;
-                    font-size: 12px;
-                    z-index: 9999;
-                    font-family: monospace;
-                `;
-                debugIndicator.textContent = 'CSS Fallback Active';
-                document.body.appendChild(debugIndicator);
-                
-                // Remove after 5 seconds
-                setTimeout(() => {
-                    if (debugIndicator.parentNode) {
-                        debugIndicator.parentNode.removeChild(debugIndicator);
-                    }
-                }, 5000);
+            // Try to get email from the email input field if it exists
+            if (emailInput) {
+                email = emailInput.value.trim();
             }
-        });
+            
+            // Build URL with mode and optional email
+            let url = 'auth/';
+            const params = new URLSearchParams();
+            
+            if (mode === 'login') {
+                params.set('mode', 'login');
+            } else {
+                params.set('mode', 'signup');
+            }
+            
+            if (email && email.includes('@')) {
+                params.set('email', email);
+            }
+            
+            if (params.toString()) {
+                url += '?' + params.toString();
+            }
+            
+            window.location.href = url;
+        }
+        
+        function handleEmailKeyPress(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                redirectToAuth('signup');
+            }
+        }
     </script>
 </body>
 </html>

@@ -51,25 +51,124 @@ AstroCal is an AI-powered calendar management platform that provides intelligent
 
 ---
 
-## 🔐 Essential Security & Authentication
+## 🔐 Authentication Strategy & Implementation Plan
 
-### 1. Supabase Authentication
-- **Built-in Auth**: Supabase handles user registration, login, and sessions
-- **OAuth Providers**: Google, GitHub, Microsoft for easy login
-- **Row Level Security (RLS)**: Database-level access control
+### Phase 1: Email/Password Authentication (Weeks 1-2)
+
+**Goal**: Establish secure, simple authentication foundation with email/password only.
+
+#### 1.1 Core Authentication Infrastructure
+- **Supabase Auth**: Leverage built-in email/password authentication
+- **User Profiles**: Automatic profile creation on signup
+- **Row Level Security (RLS)**: Database-level data isolation
+- **Session Management**: Persistent login across browser sessions
+
+#### 1.2 Page Structure
+```
+/auth.html          # Dedicated login/signup page
+/dashboard.html     # Protected dashboard (empty initially)
+/index.html         # Public landing page with waitlist
+```
+
+#### 1.3 Security Features
+- **Input Validation**: Client and server-side email/password validation
+- **Password Requirements**: Minimum 6 characters (Supabase default)
+- **Rate Limiting**: Built-in Supabase protection against brute force
+- **HTTPS Only**: All authentication traffic encrypted
+- **Development Privacy**: Password-protected during development
+
+#### 1.4 Database Schema (Phase 1)
+```sql
+-- User profiles (extends auth.users)
+CREATE TABLE profiles (
+    id UUID REFERENCES auth.users(id) PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    full_name TEXT,
+    timezone TEXT DEFAULT 'UTC',
+    preferences JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- RLS Policies
+CREATE POLICY "Users can manage own profile" ON profiles
+    FOR ALL USING (auth.uid() = id);
+```
+
+### Phase 2: Google OAuth Integration (Weeks 3-4)
+
+**Goal**: Add seamless Google sign-in as an alternative to email/password.
+
+#### 2.1 Google OAuth Setup
+- **Google Cloud Console**: Configure OAuth 2.0 application
+- **Supabase Provider**: Enable Google provider in Supabase dashboard
+- **Redirect Handling**: Seamless redirect flow to dashboard
+- **Profile Sync**: Import Google profile data (name, email)
+
+#### 2.2 Enhanced User Experience
+- **One-Click Sign In**: "Continue with Google" button
+- **Profile Enhancement**: Auto-populate user details from Google (name, email)
+- **Calendar Permission**: Optional calendar access scope for future features
+- **Fallback**: Email/password remains available as backup
+
+#### 2.3 Implementation Details
+```javascript
+// Google OAuth integration
+async function signInWithGoogle() {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: window.location.origin + '/dashboard.html',
+            queryParams: {
+                access_type: 'offline',
+                prompt: 'consent',
+            }
+        }
+    });
+}
+```
+
+### Phase 3: Enhanced Security & Features (Weeks 5-6)
+
+**Goal**: Add advanced authentication features and security improvements.
+
+#### 3.1 Advanced Security
+- **Email Verification**: Require email confirmation for new accounts
+- **Password Reset**: Secure password reset via email
+- **Account Recovery**: Multiple recovery options
+- **Audit Logging**: Track authentication events
+
+#### 3.2 User Experience Improvements
+- **Remember Me**: Extended session options
+- **Profile Management**: In-app profile editing
+- **Account Settings**: Privacy and security preferences
+- **Session Management**: View and revoke active sessions
+
+#### 3.3 Monitoring & Analytics
+- **Auth Metrics**: Track login success rates, popular methods
+- **Security Monitoring**: Failed login attempts, suspicious activity
+- **User Onboarding**: Track signup completion rates
+
+### Security Architecture
+
+#### 1. Authentication Flow
+```
+User Registration/Login → Supabase Auth → JWT Token → Database Access
+                                     ↓
+                              Row Level Security ← User ID Verification
+```
+
+#### 2. Data Protection
+- **Row Level Security**: Users can only access their own data
 - **JWT Tokens**: Automatic token management and refresh
+- **API Security**: All database access through authenticated APIs
+- **Input Sanitization**: Prevent SQL injection and XSS attacks
 
-### 2. API Security
-- **Supabase API**: Auto-generated secure APIs with built-in validation
-- **Rate Limiting**: Built-in rate limiting on Supabase APIs
-- **Input Validation**: Database constraints and validation rules
-- **CORS Configuration**: Automatic CORS handling
-
-### 3. Data Security
-- **HTTPS Only**: All Supabase connections are encrypted
-- **Row Level Security**: User data isolation at database level
-- **API Key Management**: Secure environment variable storage
-- **Real-time Security**: Secure WebSocket connections for live updates
+#### 3. Development Security
+- **Environment Variables**: Secure credential storage
+- **Development Protection**: Password-protected dev pages
+- **CORS Configuration**: Restrict API access to authorized domains
+- **Rate Limiting**: Prevent abuse and spam
 
 ---
 
@@ -511,64 +610,318 @@ async function syncCalendarEvents(events) {
 
 ## 🚀 Development Phases
 
-### Phase 1: Foundation (Weeks 1-4)
-**Supabase Setup:**
-- [ ] Create Supabase project and configure
-- [ ] Set up PostgreSQL database schema
-- [ ] Configure Row Level Security policies
-- [ ] Set up Supabase Auth with OAuth providers
-- [ ] Create Supabase Edge Functions
+### Phase 1: Authentication Foundation (Weeks 1-2)
+**Goal**: Establish secure email/password authentication with separate auth and dashboard pages.
 
-**Frontend:**
-- [ ] HTML/CSS/JS project structure with Supabase client
-- [ ] Supabase authentication integration
-- [ ] Basic dashboard layout
-- [ ] Calendar grid component
+**Database Setup:**
+- [ ] Update Supabase schema with user profiles table
+- [ ] Configure Row Level Security policies for profiles
+- [ ] Set up automatic profile creation trigger
+- [ ] Test RLS policies with sample data
 
-**Security:**
-- [ ] Row Level Security configuration
-- [ ] Supabase Auth policies
-- [ ] Environment variable setup
+**Authentication Pages:**
+- [ ] Create `auth.html` - dedicated login/signup page
+- [ ] Create `dashboard.html` - empty protected dashboard
+- [ ] Implement `auth.js` - authentication logic
+- [ ] Implement `dashboard.js` - dashboard logic and auth checks
 
-### Phase 2: Core Features (Weeks 5-8)
-**Supabase Backend:**
-- [ ] Microsoft Outlook Edge Function
-- [ ] Calendar sync Edge Functions
+**Core Features:**
+- [ ] Email/password registration and login
+- [ ] Form validation (client and server-side)
+- [ ] Session management and persistence
+- [ ] Automatic profile creation on signup
+- [ ] Protected dashboard with auth checks
+- [ ] Sign out functionality
+
+**Security & Privacy:**
+- [ ] Development password protection for auth/dashboard pages
+- [ ] Input validation and sanitization
+- [ ] Error handling and user feedback
+- [ ] Basic rate limiting protection
+
+### Phase 2: Google OAuth Integration (Weeks 3-4)
+**Goal**: Add Google sign-in as an alternative authentication method.
+
+**Google OAuth Setup:**
+- [ ] Configure Google Cloud Console OAuth application
+- [ ] Enable Google provider in Supabase dashboard
+- [ ] Set up redirect URLs and domain verification
+- [ ] Test OAuth flow in development environment
+
+**Enhanced Authentication:**
+- [ ] Add "Continue with Google" button to auth page
+- [ ] Implement Google OAuth sign-in flow
+- [ ] Handle OAuth redirects and profile data
+- [ ] Merge Google profile data with user profiles
+- [ ] Maintain email/password as backup option
+
+**User Experience:**
+- [ ] Smooth transition between auth methods
+- [ ] Profile picture import from Google
+- [ ] Auto-population of user details
+- [ ] Consistent UI/UX across auth methods
+
+### Phase 3: Enhanced Security & User Management (Weeks 5-6)
+**Goal**: Add advanced authentication features and user management.
+
+**Advanced Security:**
+- [ ] Email verification for new accounts
+- [ ] Password reset functionality
+- [ ] Account recovery options
+- [ ] Audit logging for security events
+
+**User Management:**
+- [ ] In-app profile editing
+- [ ] User preferences and settings
+- [ ] Session management (view/revoke sessions)
+- [ ] Account deletion/deactivation
+
+**Monitoring & Analytics:**
+- [ ] Authentication metrics tracking
+- [ ] Failed login attempt monitoring
+- [ ] User onboarding completion tracking
+- [ ] Security event logging
+
+### Phase 4: Dashboard Foundation (Weeks 7-8)
+**Goal**: Build basic dashboard structure and navigation.
+
+**Dashboard Infrastructure:**
+- [ ] Dashboard layout and navigation
+- [ ] User profile header with dropdown
+- [ ] Settings and preferences pages
+- [ ] Mobile-responsive dashboard design
+
+**Data Infrastructure:**
+- [ ] User-specific data models
 - [ ] Real-time subscriptions setup
-- [ ] Event CRUD operations via Supabase client
+- [ ] Basic CRUD operations for user data
+- [ ] Data validation and error handling
 
-**Frontend:**
-- [ ] Multiple calendar views (month/week/day)
-- [ ] Event creation/editing modals
-- [ ] Drag-and-drop with HTML5 API
-- [ ] Mobile responsive design
-- [ ] Real-time updates via Supabase subscriptions
-
-### Phase 3: AI Integration (Weeks 9-12)
-**Supabase Backend:**
-- [ ] OpenAI Edge Function for AI suggestions
-- [ ] Basic scheduling algorithm
-- [ ] Simple productivity analytics via Supabase queries
-- [ ] Recommendation API via Edge Functions
-
-**Frontend:**
-- [ ] AI suggestions display
-- [ ] Basic analytics dashboard with Chart.js
-- [ ] Settings and preferences
-- [ ] Enhanced calendar features
-
-### Phase 4: Polish & Launch (Weeks 13-16)
-**Supabase Backend:**
-- [ ] Edge Function performance optimization
-- [ ] Error handling improvements
-- [ ] Supabase dashboard monitoring
-- [ ] API documentation
-
-**Frontend:**
-- [ ] UI/UX polish
+**UI/UX Foundation:**
+- [ ] Consistent design system
+- [ ] Loading states and error handling
 - [ ] Accessibility improvements
-- [ ] Performance optimization
-- [ ] Testing and bug fixes
+- [ ] Cross-browser compatibility
+
+### Phase 5: Calendar Integration Preparation (Weeks 9-10)
+**Goal**: Prepare infrastructure for calendar features.
+
+**Calendar Data Models:**
+- [ ] Design calendar event schema
+- [ ] Set up calendar integration tables
+- [ ] Configure RLS for calendar data
+- [ ] Create calendar sync infrastructure
+
+**Basic Calendar UI:**
+- [ ] Calendar view components
+- [ ] Event display and basic interactions
+- [ ] Calendar navigation (month/week/day views)
+- [ ] Event creation modal
+
+### Phase 6: Google Calendar Integration (Weeks 11-12)
+**Goal**: Connect Google Calendar for authenticated users.
+
+**Google Calendar API:**
+- [ ] Set up Google Calendar API credentials
+- [ ] Implement calendar permission flow
+- [ ] Create Supabase Edge Functions for calendar sync
+- [ ] Build calendar event synchronization
+
+**Calendar Features:**
+- [ ] Import existing Google Calendar events
+- [ ] Bi-directional sync (AstroCal ↔ Google)
+- [ ] Conflict resolution for overlapping events
+- [ ] Real-time calendar updates
+
+### Phase 7: Polish & Launch Preparation (Weeks 13-16)
+**Goal**: Finalize features, optimize performance, and prepare for launch.
+
+**Performance & Optimization:**
+- [ ] Database query optimization
+- [ ] Frontend performance improvements
+- [ ] Caching strategies
+- [ ] Bundle size optimization
+
+**Quality Assurance:**
+- [ ] Comprehensive testing (unit, integration, e2e)
+- [ ] Cross-browser and device testing
+- [ ] Security audit and penetration testing
+- [ ] User acceptance testing
+
+**Launch Preparation:**
+- [ ] Production deployment setup
+- [ ] Monitoring and alerting
+- [ ] Documentation and user guides
+- [ ] Marketing and launch strategy
+
+---
+
+## 📋 Phase 1 Implementation Guide (Email/Password Authentication)
+
+### Step 1: Database Schema Setup
+
+Run this SQL in your Supabase SQL Editor:
+
+```sql
+-- User profiles table (extends auth.users)
+CREATE TABLE IF NOT EXISTS profiles (
+    id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    full_name TEXT,
+    timezone TEXT DEFAULT 'UTC',
+    preferences JSONB DEFAULT '{}',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS on profiles
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for profiles
+CREATE POLICY "Users can view own profile" ON profiles
+    FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own profile" ON profiles
+    FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert own profile" ON profiles
+    FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Create index for faster profile lookups
+CREATE INDEX IF NOT EXISTS idx_profiles_email ON profiles(email);
+
+-- Function to automatically create profile on user signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO public.profiles (id, email, full_name)
+    VALUES (
+        NEW.id,
+        NEW.email,
+        COALESCE(NEW.raw_user_meta_data->>'full_name', NEW.email)
+    );
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger to create profile automatically
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Function to update updated_at column
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger for profiles updated_at
+CREATE TRIGGER update_profiles_updated_at 
+    BEFORE UPDATE ON profiles 
+    FOR EACH ROW 
+    EXECUTE FUNCTION update_updated_at_column();
+```
+
+### Step 2: File Structure
+
+Create the following files in your project:
+
+```
+project/
+├── index.html          # Landing page with waitlist (existing)
+├── auth.html           # Login/signup page (new)
+├── dashboard.html      # Protected dashboard (new)
+├── auth.js            # Authentication logic (new)
+├── dashboard.js       # Dashboard logic (new)
+├── script.js          # Landing page logic (existing)
+├── styles.css         # Shared styles (existing)
+├── supabase-config.js # Supabase configuration (existing)
+└── ...other files
+```
+
+### Step 3: Development Privacy
+
+Add password protection to both `auth.html` and `dashboard.html`:
+
+```html
+<!-- Add after <body> tag -->
+<script>
+// Simple development password protection
+(function() {
+    const DEV_PASSWORD = 'astrocal2024'; // Change this password
+    const DEV_MODE = true; // Set to false to disable protection
+    
+    if (DEV_MODE && !sessionStorage.getItem('dev_authenticated')) {
+        const password = prompt('Development Access Required:');
+        if (password !== DEV_PASSWORD) {
+            alert('Access denied');
+            window.location.href = 'index.html';
+            return;
+        }
+        sessionStorage.setItem('dev_authenticated', 'true');
+    }
+})();
+</script>
+```
+
+### Step 4: Core Features Implementation
+
+**Authentication Flow:**
+1. User visits `auth.html` 
+2. Can sign up or sign in with email/password
+3. On success, redirected to `dashboard.html`
+4. Dashboard checks authentication state
+5. If not authenticated, redirected back to `auth.html`
+
+**Key Components:**
+- Form validation (email format, password length)
+- Loading states during authentication
+- Error handling and user feedback
+- Session persistence across browser sessions
+- Automatic profile creation on signup
+- Secure sign out functionality
+
+### Step 5: Testing Checklist
+
+**Authentication Testing:**
+- [ ] Sign up with valid email/password
+- [ ] Sign up with invalid email (should show error)
+- [ ] Sign up with weak password (should show error)
+- [ ] Sign in with correct credentials
+- [ ] Sign in with incorrect credentials (should show error)
+- [ ] Session persistence (refresh browser, should stay logged in)
+- [ ] Sign out functionality (should redirect to auth page)
+
+**Navigation Testing:**
+- [ ] Direct access to `/dashboard.html` without auth (should redirect)
+- [ ] Direct access to `/auth.html` when already logged in (should redirect to dashboard)
+- [ ] Link from landing page to auth page works
+- [ ] Mobile responsiveness on all pages
+
+**Security Testing:**
+- [ ] Development password protection works
+- [ ] User data isolation (users can only see their own data)
+- [ ] SQL injection protection (try malicious inputs)
+- [ ] XSS protection (try script inputs)
+
+### Success Criteria for Phase 1
+
+✅ **Complete when:**
+- Users can register with email/password
+- Users can sign in and access dashboard
+- Sessions persist across browser refreshes
+- User profiles are automatically created
+- All forms have proper validation
+- Error messages are user-friendly
+- Authentication pages are protected from public access
+- All security tests pass
+
+**Time Estimate: 1-2 weeks**
+**Priority: Critical (blocks all other features)**
 
 ---
 
@@ -709,36 +1062,113 @@ jobs:
 
 ---
 
-## 🎯 Next Steps
+## 🎯 Next Steps & Implementation Order
 
-### Immediate Actions (Week 1)
-1. **Setup Development Environment**
-   - Initialize GitHub repository
-   - Create Supabase project and configure
-   - Set up local Supabase development environment
+### 🚀 Phase 1: Start Here (Weeks 1-2)
+**Priority: CRITICAL - Must complete before any other features**
 
-2. **Begin Supabase Setup**
-   - Create database schema and tables
-   - Configure Row Level Security policies
-   - Set up Supabase Auth with OAuth providers
+#### Immediate Actions (This Week)
+1. **Database Setup** (Day 1-2)
+   - [ ] Run the Phase 1 SQL schema in Supabase SQL Editor
+   - [ ] Test profile creation trigger with sample user
+   - [ ] Verify RLS policies are working correctly
 
-3. **Start Frontend Development**
-   - Create HTML/CSS/JS project structure
-   - Set up responsive CSS framework
-   - Initialize Supabase client
-   - Create basic page structure
+2. **Create Authentication Pages** (Day 3-5)
+   - [ ] Create `auth.html` with email/password forms
+   - [ ] Create `dashboard.html` with basic layout
+   - [ ] Add development password protection
+   - [ ] Style authentication pages to match brand
 
-### Short-term Goals (Month 1)
-- Complete Supabase authentication system
-- Implement Google Calendar OAuth integration via Supabase
-- Build basic calendar interface with real-time updates
-- Deploy to staging environment
+3. **Implement Authentication Logic** (Day 6-7)
+   - [ ] Create `auth.js` with signup/signin functionality
+   - [ ] Create `dashboard.js` with auth checks
+   - [ ] Add form validation and error handling
+   - [ ] Test complete authentication flow
 
-### Long-term Vision (6 Months)
-- Full-featured calendar management platform
-- AI-powered scheduling recommendations via Supabase Edge Functions
-- Mobile-responsive design
-- Production-ready application with active users on Supabase platform
+#### Week 2: Testing & Refinement
+- [ ] Complete authentication testing checklist
+- [ ] Fix any bugs or UX issues
+- [ ] Add loading states and better error messages
+- [ ] Test on multiple devices and browsers
+- [ ] Document any setup issues for future reference
+
+#### Success Criteria ✅
+- [ ] New users can register with email/password
+- [ ] Existing users can sign in successfully
+- [ ] Dashboard is properly protected (redirects if not authenticated)
+- [ ] User sessions persist across browser refreshes
+- [ ] All forms have proper validation and error handling
+
+### 🔄 Phase 2: Google OAuth (Weeks 3-4)
+**Dependency: Phase 1 must be complete and working**
+
+#### Goals
+- Add Google sign-in as alternative to email/password
+- Import Google profile data (name, email)
+- Maintain email/password as backup option
+
+#### Key Tasks
+- [ ] Configure Google Cloud Console OAuth app
+- [ ] Enable Google provider in Supabase
+- [ ] Add "Continue with Google" button to auth page
+- [ ] Test OAuth flow end-to-end
+
+### 🛡️ Phase 3: Enhanced Security (Weeks 5-6)
+**Optional but recommended before public launch**
+
+#### Goals
+- Email verification for new accounts
+- Password reset functionality  
+- Advanced security features
+
+### 📊 Phase 4+: Dashboard & Calendar Features (Weeks 7+)
+**Build upon solid authentication foundation**
+
+#### Progressive Enhancement
+- Dashboard infrastructure and navigation
+- User profile management (name, email, preferences)
+- Calendar data models and basic UI
+- Google Calendar integration
+- AI features and advanced functionality
+
+---
+
+## ⚠️ Critical Dependencies
+
+**Everything depends on Phase 1 authentication working correctly:**
+- Calendar features need authenticated users
+- User data needs proper RLS policies
+- Dashboard needs auth state management
+- All future features require user accounts
+
+**Do not proceed to Phase 2+ until Phase 1 is:**
+- ✅ Fully implemented and tested
+- ✅ Working reliably in your development environment
+- ✅ Passes all authentication tests
+- ✅ Has proper error handling and user feedback
+
+---
+
+## 🧪 Development Best Practices
+
+### Testing Each Phase
+1. **Manual Testing**: Test every user flow thoroughly
+2. **Edge Cases**: Try invalid inputs, network errors, etc.
+3. **Cross-Browser**: Test on Chrome, Firefox, Safari
+4. **Mobile**: Test responsive design on mobile devices
+5. **Security**: Verify RLS policies and input validation
+
+### Code Quality
+- **Comments**: Document complex authentication logic
+- **Error Handling**: Graceful handling of all error cases
+- **User Feedback**: Clear, helpful error and success messages
+- **Performance**: Fast loading and responsive interactions
+
+### Git Workflow
+- **Feature Branches**: Create branch for each phase
+- **Frequent Commits**: Commit working code frequently
+- **Testing**: Test before merging to main branch
+- **Documentation**: Update README with setup instructions
 
 ---
 

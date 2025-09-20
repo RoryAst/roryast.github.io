@@ -1,0 +1,327 @@
+/* ========================================
+   ASTROCAL BASE STYLES
+   ======================================== */
+
+:root {
+    /* ========================================
+       COLOR PALETTE
+       ======================================== */
+    
+    /* Primary Brand Colors */
+    --color-primary-purple: #6b21a8;
+    --color-primary-blue: #0ea5e9;
+    --color-primary-cyan: #06b6d4;
+    --color-primary-orange: #fbbf24;
+    --color-primary-pink: #ec4899;
+    
+    /* Extended Brand Colors */
+    --color-cosmic-purple: #6C47FF;
+    --color-stellar-blue: #00E0FF;
+    --color-nebula-cyan: #06b6d4;
+    --color-cosmic-orange: #fbbf24;
+    --color-galaxy-pink: #ec4899;
+    
+    /* Neutral Colors */
+    --color-void-black: #0f0f23;
+    --color-star-white: #ffffff;
+    --color-cosmic-gray: #1e1b4b;
+    --color-space-gray: #312e81;
+    --color-moon-gray: #f8fafc;
+    
+    /* Gray Scale */
+    --color-gray-50: #f8fafc;
+    --color-gray-100: #f1f5f9;
+    --color-gray-200: #e2e8f0;
+    --color-gray-300: #cbd5e1;
+    --color-gray-400: #94a3b8;
+    --color-gray-500: #64748b;
+    --color-gray-600: #475569;
+    --color-gray-700: #334155;
+    --color-gray-800: #1e293b;
+    --color-gray-900: #0f172a;
+    
+    /* Semantic Colors */
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-muted: #64748b;
+    --color-text-white: #ffffff;
+    --color-text-cosmic: #1e1b4b;
+    
+    /* Status Colors */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-error: #ef4444;
+    --color-info: #3b82f6;
+    
+    /* ========================================
+       GRADIENTS
+       ======================================== */
+    
+    /* Primary Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--color-primary-purple) 0%, var(--color-primary-blue) 50%, var(--color-primary-cyan) 100%);
+    --gradient-primary-horizontal: linear-gradient(90deg, var(--color-cosmic-purple) 0%, var(--color-stellar-blue) 100%);
+    --gradient-primary-vertical: linear-gradient(180deg, var(--color-primary-purple) 0%, var(--color-space-gray) 100%);
+    
+    /* Text Gradients */
+    --gradient-text-primary: linear-gradient(135deg, var(--color-cosmic-purple) 0%, var(--color-stellar-blue) 100%);
+    --gradient-text-brand: linear-gradient(135deg, var(--color-primary-purple) 0%, var(--color-primary-blue) 50%, var(--color-primary-cyan) 100%);
+    
+    /* Background Gradients */
+    --gradient-background-main: linear-gradient(135deg, var(--color-primary-purple) 0%, var(--color-primary-blue) 50%, var(--color-primary-cyan) 100%);
+    --gradient-background-card: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
+    --gradient-background-card-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(248, 250, 252, 0.1) 100%);
+    --gradient-background-overlay: linear-gradient(135deg, rgba(110, 33, 168, 0.05) 0%, rgba(14, 165, 233, 0.05) 100%);
+    
+    /* Button Gradients */
+    --gradient-button-primary: linear-gradient(135deg, var(--color-primary-orange) 0%, #f59e0b 100%);
+    --gradient-button-secondary: linear-gradient(135deg, var(--color-primary-purple) 0%, var(--color-primary-blue) 100%);
+    --gradient-button-hover: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    --gradient-button-glass: linear-gradient(135deg, var(--color-space-gray) 0%, var(--color-primary-purple) 100%);
+    
+    /* Feature Gradients */
+    --gradient-feature-bullet: linear-gradient(135deg, var(--color-primary-purple) 0%, var(--color-primary-blue) 100%);
+    --gradient-feature-text: linear-gradient(135deg, var(--color-primary-purple) 0%, var(--color-primary-blue) 100%);
+    --gradient-suggested-task: linear-gradient(135deg, rgba(107, 33, 168, 0.2) 0%, rgba(14, 165, 233, 0.2) 100%);
+    --gradient-suggested-task-hover: linear-gradient(135deg, rgba(107, 33, 168, 0.3) 0%, rgba(14, 165, 233, 0.3) 100%);
+    
+    /* ========================================
+       TYPOGRAPHY
+       ======================================== */
+    
+    /* Font Families */
+    --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-family-fallback: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    
+    /* Font Sizes */
+    --font-size-xs: 0.75rem;      /* 12px */
+    --font-size-sm: 0.875rem;     /* 14px */
+    --font-size-base: 1rem;       /* 16px */
+    --font-size-lg: 1.125rem;     /* 18px */
+    --font-size-xl: 1.25rem;      /* 20px */
+    --font-size-2xl: 1.5rem;      /* 24px */
+    --font-size-3xl: 1.875rem;    /* 30px */
+    --font-size-4xl: 2.25rem;     /* 36px */
+    --font-size-5xl: 3rem;        /* 48px */
+    --font-size-6xl: 3.75rem;     /* 60px */
+    
+    /* Line Heights */
+    --line-height-tight: 1.1;
+    --line-height-snug: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.6;
+    --line-height-loose: 1.8;
+    
+    /* Letter Spacing */
+    --letter-spacing-tight: -0.03em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.01em;
+    --letter-spacing-wider: 0.5px;
+    --letter-spacing-widest: 0.1em;
+    
+    /* ========================================
+       SPACING
+       ======================================== */
+    
+    /* Base Spacing Scale (4px increments) */
+    --space-0: 0;
+    --space-1: 0.25rem;    /* 4px */
+    --space-2: 0.5rem;     /* 8px */
+    --space-3: 0.75rem;    /* 12px */
+    --space-4: 1rem;       /* 16px */
+    --space-5: 1.25rem;    /* 20px */
+    --space-6: 1.5rem;     /* 24px */
+    --space-8: 2rem;       /* 32px */
+    --space-10: 2.5rem;    /* 40px */
+    --space-12: 3rem;      /* 48px */
+    --space-16: 4rem;      /* 64px */
+    --space-20: 5rem;      /* 80px */
+    --space-24: 6rem;      /* 96px */
+    --space-32: 8rem;      /* 128px */
+    
+    /* Component-Specific Spacing */
+    --space-card-padding: var(--space-6);
+    --space-card-gap: 60px;
+    --space-card-mobile-gap: 40px;
+    --space-dock-gap: var(--space-5);
+    --space-feature-gap: var(--space-3);
+    --space-event-gap: var(--space-2);
+    
+    /* ========================================
+       BORDER RADIUS
+       ======================================== */
+    
+    /* Primary Radius Values */
+    --radius-none: 0;
+    --radius-sm: 0.25rem;     /* 4px */
+    --radius-base: 0.5rem;    /* 8px */
+    --radius-md: 0.75rem;     /* 12px */
+    --radius-lg: 1rem;        /* 16px */
+    --radius-xl: 1.5rem;      /* 24px */
+    --radius-2xl: 2rem;       /* 32px */
+    --radius-full: 9999px;
+    
+    /* Component-Specific Radius */
+    --radius-card: var(--radius-lg);
+    --radius-button: var(--radius-base);
+    --radius-button-large: var(--radius-lg);
+    --radius-dock: 50px;
+    --radius-feature: var(--radius-base);
+    --radius-event: var(--radius-base);
+    
+    /* ========================================
+       SHADOWS
+       ======================================== */
+    
+    /* Base Shadow Scale */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    
+    /* Component-Specific Shadows */
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-dock: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-dock-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+    --shadow-button: var(--shadow-sm);
+    --shadow-button-hover: var(--shadow-md);
+    --shadow-text: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-text-strong: 0 2px 4px rgba(0, 0, 0, 0.3);
+    
+    /* ========================================
+       LAYOUT DIMENSIONS
+       ======================================== */
+    
+    /* Container Dimensions */
+    --container-max-width: 1200px;
+    --container-padding: var(--space-10);
+    --container-padding-mobile: var(--space-6);
+    
+    /* Card Dimensions */
+    --card-min-height: 320px;
+    --card-min-height-mobile: 280px;
+    --card-padding: var(--space-6);
+    --card-gap: 60px;
+    --card-mobile-gap: 40px;
+    
+    /* Dock Dimensions */
+    --dock-height: 50px;
+    --dock-padding: var(--space-4) var(--space-10);
+    --dock-gap: var(--space-5);
+    
+    /* Button Dimensions */
+    --button-height-sm: 32px;
+    --button-height-base: 40px;
+    --button-height-lg: 48px;
+    --button-padding-sm: var(--space-2) var(--space-4);
+    --button-padding-base: var(--space-3) var(--space-6);
+    --button-padding-lg: var(--space-4) var(--space-8);
+    
+    /* ========================================
+       Z-INDEX SCALE
+       ======================================== */
+    
+    --z-index-base: 0;
+    --z-index-dropdown: 10;
+    --z-index-sticky: 20;
+    --z-index-fixed: 30;
+    --z-index-modal-backdrop: 40;
+    --z-index-modal: 50;
+    --z-index-popover: 60;
+    --z-index-tooltip: 70;
+    --z-index-toast: 80;
+    --z-index-dock: 1000;
+    
+    /* ========================================
+       TRANSITIONS
+       ======================================== */
+    
+    --transition-fast: 0.15s ease;
+    --transition-base: 0.2s ease;
+    --transition-slow: 0.3s ease;
+    --transition-slower: 0.5s ease;
+    
+    /* ========================================
+       BACKDROP FILTERS
+       ======================================== */
+    
+    --backdrop-blur-sm: blur(4px);
+    --backdrop-blur-base: blur(8px);
+    --backdrop-blur-md: blur(12px);
+    --backdrop-blur-lg: blur(16px);
+    --backdrop-blur-xl: blur(20px);
+}
+
+/* ========================================
+   RESET & BASE STYLES
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    line-height: var(--line-height-normal);
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-family: var(--font-family-primary);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text-primary);
+    background: var(--gradient-background-main);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Landing page specific body styles */
+body.landing-page {
+    overflow: hidden;
+    position: relative;
+    height: 100vh;
+}
+
+.scroll-container {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Background overlay effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(110, 33, 168, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: var(--z-index-base);
+}

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AstroCal Dashboard - Your personalized schedule management center">
+    <title>Dashboard - AstroCal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Dashboard Page CSS Files -->
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/pages.css">
+    <link rel="stylesheet" href="../assets/css/utilities.css">
+    <style>
+        /* Dashboard-specific styles */
+        .dashboard-container {
+            min-height: 100vh;
+            background: var(--gradient-background-main);
+            position: relative;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: var(--backdrop-blur-xl);
+            -webkit-backdrop-filter: var(--backdrop-blur-xl);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: var(--space-4) var(--space-6);
+            position: sticky;
+            top: 0;
+            z-index: var(--z-index-sticky);
+        }
+
+        .dashboard-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+        }
+
+        .dashboard-logo {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-extrabold);
+            background: var(--gradient-text-brand);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            letter-spacing: var(--letter-spacing-tight);
+        }
+
+        .dashboard-user {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: var(--space-1);
+        }
+
+        .user-name {
+            font-weight: var(--font-weight-semibold);
+            color: var(--color-text-primary);
+            font-size: var(--font-size-sm);
+        }
+
+        .user-email {
+            font-size: var(--font-size-xs);
+            color: var(--color-text-muted);
+        }
+
+        .logout-button {
+            padding: var(--space-2) var(--space-4);
+            background: transparent;
+            color: var(--color-text-secondary);
+            border: 1px solid var(--color-gray-300);
+            border-radius: var(--radius-button);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .logout-button:hover {
+            background: var(--color-gray-100);
+            border-color: var(--color-gray-400);
+            color: var(--color-text-primary);
+        }
+
+        .dashboard-content {
+            padding: var(--space-16) var(--space-6);
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .welcome-section {
+            background: var(--gradient-background-card);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: var(--backdrop-blur-xl);
+            -webkit-backdrop-filter: var(--backdrop-blur-xl);
+            padding: var(--space-16);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-background-overlay);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-title {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-extrabold);
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-4);
+            line-height: var(--line-height-tight);
+        }
+
+        .welcome-subtitle {
+            font-size: var(--font-size-lg);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-8);
+            line-height: var(--line-height-relaxed);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .coming-soon-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            background: var(--gradient-button-secondary);
+            color: var(--color-text-white);
+            padding: var(--space-3) var(--space-6);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-6);
+        }
+
+        .feature-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-6);
+            margin-top: var(--space-12);
+        }
+
+        .preview-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--color-gray-200);
+            border-radius: var(--radius-card);
+            padding: var(--space-8);
+            text-align: left;
+            position: relative;
+            opacity: 0.6;
+            transition: all var(--transition-base);
+        }
+
+        .preview-card::after {
+            content: 'Coming Soon';
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: var(--color-primary-purple);
+            color: var(--color-text-white);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .preview-card:hover {
+            opacity: 0.8;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .preview-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-feature-bullet);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--space-4);
+        }
+
+        .preview-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--color-text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .preview-description {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            line-height: var(--line-height-relaxed);
+        }
+
+        .loading-indicator {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: var(--z-index-modal);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--color-gray-300);
+            border-top: 3px solid var(--color-primary-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                padding: var(--space-3) var(--space-4);
+            }
+
+            .dashboard-nav {
+                flex-direction: column;
+                gap: var(--space-3);
+                align-items: stretch;
+            }
+
+            .dashboard-user {
+                justify-content: space-between;
+            }
+
+            .user-info {
+                align-items: flex-start;
+            }
+
+            .dashboard-content {
+                padding: var(--space-8) var(--space-4);
+            }
+
+            .welcome-section {
+                padding: var(--space-8);
+            }
+
+            .welcome-title {
+                font-size: var(--font-size-3xl);
+            }
+
+            .feature-preview {
+                grid-template-columns: 1fr;
+                gap: var(--space-4);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Loading indicator -->
+        <div class="loading-indicator" id="loadingIndicator">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Dashboard header -->
+        <header class="dashboard-header">
+            <nav class="dashboard-nav">
+                <a href="../dashboard/" class="dashboard-logo">AstroCal</a>
+                
+                <div class="dashboard-user">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">Loading...</div>
+                        <div class="user-email" id="userEmail">Loading...</div>
+                    </div>
+                    <button class="logout-button" id="logoutButton">Sign Out</button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main dashboard content -->
+        <main class="dashboard-content">
+            <section class="welcome-section">
+                <div class="welcome-content">
+                    <div class="coming-soon-badge">
+                        <span>🚀</span>
+                        <span>Phase 1: Authentication Complete</span>
+                    </div>
+                    
+                    <h1 class="welcome-title">Welcome to your AstroCal Dashboard</h1>
+                    
+                    <p class="welcome-subtitle">
+                        You've successfully signed in! Your personalized calendar management experience is being prepared. 
+                        Soon you'll be able to integrate with Google Calendar, create intelligent schedules, and get AI-powered productivity insights.
+                    </p>
+
+                    <!-- Feature preview grid -->
+                    <div class="feature-preview">
+                        <div class="preview-card">
+                            <div class="preview-icon">📅</div>
+                            <h3 class="preview-title">Smart Calendar Integration</h3>
+                            <p class="preview-description">
+                                Connect your Google Calendar and Outlook accounts for unified schedule management across all your devices.
+                            </p>
+                        </div>
+
+                        <div class="preview-card">
+                            <div class="preview-icon">🤖</div>
+                            <h3 class="preview-title">AI-Powered Scheduling</h3>
+                            <p class="preview-description">
+                                Get intelligent meeting suggestions, optimal time slot recommendations, and automatic conflict resolution.
+                            </p>
+                        </div>
+
+                        <div class="preview-card">
+                            <div class="preview-icon">📊</div>
+                            <h3 class="preview-title">Productivity Analytics</h3>
+                            <p class="preview-description">
+                                Track your time usage patterns, identify productivity peaks, and receive personalized workflow optimization tips.
+                            </p>
+                        </div>
+
+                        <div class="preview-card">
+                            <div class="preview-icon">🔄</div>
+                            <h3 class="preview-title">Advanced Recurring Events</h3>
+                            <p class="preview-description">
+                                Create complex recurring patterns, manage exceptions, and automatically adjust schedules based on your preferences.
+                            </p>
+                        </div>
+
+                        <div class="preview-card">
+                            <div class="preview-icon">📱</div>
+                            <h3 class="preview-title">Mobile Synchronization</h3>
+                            <p class="preview-description">
+                                Access your schedule anywhere with seamless mobile app integration and real-time synchronization.
+                            </p>
+                        </div>
+
+                        <div class="preview-card">
+                            <div class="preview-icon">🔒</div>
+                            <h3 class="preview-title">Enterprise Security</h3>
+                            <p class="preview-description">
+                                Your data is protected with enterprise-grade security, end-to-end encryption, and privacy-first design.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Supabase Client Library -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <!-- Supabase Configuration -->
+    <script src="../config/supabase-config.js"></script>
+    <!-- Dashboard JavaScript -->
+    <script src="../assets/js/auth.js"></script>
+    <!-- Dashboard functionality loaded via auth.js -->
+</body>
+</html>
